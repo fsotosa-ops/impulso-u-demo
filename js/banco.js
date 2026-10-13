@@ -1,5 +1,5 @@
-import { banco as datos, estado, guardar, pregunta, estadoDe, contadores } from './estado.js';
-import { ic, esc, LETRAS, toast, modal } from './ui.js';
+import { banco as datos, estado, guardar, pregunta, estadoDe, contadores, textoDe } from './estado.js';
+import { ic, esc, LETRAS, toast } from './ui.js';
 
 let pestana = 'revisar';
 let actual = null;
@@ -34,7 +34,7 @@ function detalle(q) {
   return `
   <div class="card">
     <div class="fila-sep"><div>${etiqueta(q)}</div><span class="desc">${esc(datos.areas[q.area])}</span></div>
-    ${q.texto ? `<div class="texto-base">${esc(datos.textos[q.texto])}</div>` : ''}
+    ${textoDe(q) ? `<div class="texto-base">${esc(textoDe(q))}</div>` : ''}
     <p class="enunciado">${esc(q.enunciado)}</p>
     <ol class="opciones ${corrigiendo ? 'editable' : ''}">${q.opciones.map((o, i) => `
       <li class="${i === q.clave ? 'clave' : ''}" data-i="${i}" ${corrigiendo ? 'role="button" tabindex="0"' : ''}>
@@ -64,7 +64,7 @@ export function banco(el, render) {
   el.innerHTML = `
   <div class="titulo">
     <div><h1>Banco de preguntas</h1><p class="sub">${c.total} preguntas · ${c.pctPropio} % del banco aprobado es contenido propio del colectivo</p></div>
-    <button class="btn" data-acc="material">${ic('mas', 16)} Agregar material del colectivo</button>
+    <button class="btn" data-acc="material">${ic('chispa', 16)} Crear con IA desde material</button>
   </div>
 
   <div class="card suave lote">
@@ -94,7 +94,7 @@ export function banco(el, render) {
   el.querySelectorAll('[data-q]').forEach(b => b.addEventListener('click', () => { actual = b.dataset.q; corrigiendo = false; render(); }));
   el.querySelectorAll('[data-acc]').forEach(b => b.addEventListener('click', () => {
     const acc = b.dataset.acc;
-    if (acc === 'material') return agregarMaterial(render);
+    if (acc === 'material') { location.hash = '#/crear'; return; }
     if (acc === 'corregir') { corrigiendo = !corrigiendo; return render(); }
     estado.decisiones[q.id] = acc === 'aprobar' ? 'aprobada' : 'descartada';
     guardar();
@@ -115,24 +115,5 @@ export function banco(el, render) {
     };
     li.addEventListener('click', marcar);
     li.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); marcar(); } });
-  });
-}
-
-function agregarMaterial(render) {
-  modal(`
-    <h2>Agregar material del colectivo</h2>
-    <p class="desc" style="margin-top:4px">Un texto, una lectura o un problema del barrio. Entra al lote del miércoles y la IA propone preguntas a partir de él.</p>
-    <textarea id="material" placeholder="Por ejemplo: un texto sobre lo que cuesta llegar a la universidad desde el barrio"></textarea>
-    <div class="acciones"><button class="btn" data-cerrar>Cancelar</button><button class="btn primario" id="enviar">Enviar al próximo lote</button></div>`,
-  (m, cerrar) => {
-    m.querySelector('#enviar').addEventListener('click', () => {
-      const t = m.querySelector('#material').value.trim();
-      if (!t) return m.querySelector('#material').focus();
-      estado.material.push(t);
-      guardar();
-      cerrar();
-      toast('Guardado para el lote del miércoles');
-      render();
-    });
   });
 }

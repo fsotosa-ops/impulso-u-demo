@@ -13,6 +13,8 @@ export async function cargar() {
   banco = await r.json();
   const guardado = localStorage.getItem(KEY);
   estado = guardado ? JSON.parse(guardado) : semilla();
+  estado.extra = estado.extra || [];
+  banco.preguntas.push(...estado.extra);
   return estado;
 }
 
@@ -22,6 +24,7 @@ function semilla() {
     ediciones: {},           // id → { clave }
     simulacro: { codigo: null, ids: porDefecto(), numero: 5, publicado: null },
     material: [],            // textos que el colectivo mandó al próximo lote
+    extra: [],               // preguntas que salieron de «Crear con IA» y el tallerista aprobó
     dispositivo: Math.random().toString(16).slice(2, 6),
     intento: null,           // simulacro en curso en el celular
     cola: [],                // intentos terminados que aún no llegan a la plataforma
@@ -35,8 +38,19 @@ export function guardar() {
 }
 
 export function reiniciar() {
+  const ids = new Set(estado.extra.map(q => q.id));
+  banco.preguntas = banco.preguntas.filter(q => !ids.has(q.id));
   localStorage.removeItem(KEY);
   estado = semilla();
+  guardar();
+}
+
+// Las preguntas aprobadas desde «Crear con IA» entran al banco como aprobadas por el comité.
+export function agregarPreguntas(qs) {
+  for (const q of qs) {
+    estado.extra.push(q);
+    banco.preguntas.push(q);
+  }
   guardar();
 }
 
@@ -44,6 +58,11 @@ export function pregunta(id) {
   const q = banco.preguntas.find(p => p.id === id);
   const ed = estado.ediciones[id];
   return ed ? { ...q, ...ed } : q;
+}
+
+// Contexto de lectura de una pregunta: un texto del banco o el material que subió el tallerista.
+export function textoDe(q) {
+  return q.contexto || (q.texto ? banco.textos[q.texto] : '');
 }
 
 export function estadoDe(q) {

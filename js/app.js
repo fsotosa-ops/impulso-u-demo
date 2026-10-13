@@ -5,8 +5,10 @@ import { simulacros } from './simulacros.js';
 import { grupo } from './grupo.js';
 import { hojas, hojasPendientes } from './hojas.js';
 import { estudiante } from './simulacro.js';
+import { crear } from './crear.js';
+import { login, sesion, cerrarSesion } from './login.js';
 
-const RUTAS = { '': hoy, banco, simulacros, grupo, hojas, estudiante };
+const RUTAS = { '': hoy, banco, simulacros, crear, grupo, hojas, estudiante };
 
 const vista = document.getElementById('vista');
 const app = document.getElementById('app');
@@ -19,7 +21,8 @@ function rutaActual() {
 export function render() {
   const ruta = rutaActual();
   const modo = ruta === 'estudiante' ? 'estudiante' : 'tallerista';
-  app.classList.toggle('sin-lateral', modo === 'estudiante');
+  const fuera = modo === 'tallerista' && !sesion();
+  app.classList.toggle('sin-lateral', modo === 'estudiante' || fuera);
   document.querySelectorAll('[data-modo]').forEach(a => a.setAttribute('aria-current', String(a.dataset.modo === modo)));
   document.querySelectorAll('[data-ruta]').forEach(a => {
     if (a.dataset.ruta === ruta) a.setAttribute('aria-current', 'page');
@@ -27,12 +30,19 @@ export function render() {
   });
   document.getElementById('badge-banco').textContent = contadores().pendientes;
   document.getElementById('badge-hojas').textContent = hojasPendientes() || '';
+  if (fuera) return login(vista, render);
   RUTAS[ruta](vista, render);
 }
 
 window.addEventListener('hashchange', () => { render(); window.scrollTo(0, 0); vista.focus({ preventScroll: true }); });
 window.addEventListener('online', () => { sincronizar(); render(); });
 window.addEventListener('offline', render);
+
+document.getElementById('salir').addEventListener('click', () => {
+  cerrarSesion();
+  location.hash = '#/';
+  render();
+});
 
 document.getElementById('reiniciar').addEventListener('click', () => {
   reiniciar();

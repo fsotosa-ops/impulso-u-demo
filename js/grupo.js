@@ -1,5 +1,6 @@
 import { banco, estado, pregunta } from './estado.js';
-import { ic, esc, GRUPO, toast } from './ui.js';
+import { ic, esc, GRUPO } from './ui.js';
+import { prepararCrear } from './crear.js';
 
 // Datos de ejemplo del grupo, semanas 1 a 12.
 const ACTIVOS = [50, 49, 47, 46, 46, 44, 43, 42, 41, 41, 40, 39];
@@ -67,7 +68,7 @@ export function grupo(el) {
         <div class="r ${a === bajo ? 'bajo' : ''}" title="${esc(a.nombre)}: ${a.pct} % de aciertos"><span>${esc(a.nombre)}</span><div class="pista"><div style="width:${a.pct}%"></div></div><span class="v">${a.pct} %</span></div>`).join('')}
       </div>
       <div class="acciones">
-        <button class="btn" data-acc="pedir">${ic('chispa', 16)} Pedir más preguntas de ${esc(bajo.nombre)}</button>
+        <button class="btn" data-acc="pedir">${ic('chispa', 16)} Crear práctica de ${esc(bajo.nombre)} con IA</button>
       </div>
     </div>
     <div class="card grafico">
@@ -77,5 +78,5 @@ export function grupo(el) {
     </div>
   </div>`;
 
-  el.querySelector('[data-acc="pedir"]').addEventListener('click', () => toast(`El lote del miércoles traerá más preguntas de ${bajo.nombre}`));
+  el.querySelector('[data-acc="pedir"]').addEventListener('click', () => { prepararCrear(bajo.area); location.hash = '#/crear'; });
 }

@@ -6,10 +6,11 @@ Publicado en https://fsotosa-ops.github.io/impulso-u-demo/
 
 ## Las dos caras de la app
 
-**Tallerista**, el usuario principal:
+**Tallerista**, el usuario principal (entra con correo y contraseña; en la demo sirve cualquiera):
 - **Hoy:** el simulacro del día y las respuestas que van llegando.
 - **Banco de preguntas:** el comité revisa lo que propuso la IA y puede aprobar, corregir la clave o descartar. También agrega material propio del colectivo.
 - **Simulacros:** el ciclo de 8. Desde aquí se prepara y publica el de hoy, y se comparte con un enlace de WhatsApp, un código de grupo o un PDF para imprimir.
+- **Crear con IA:** sube o pega material del colectivo. La IA lo lee, lo cruza con los resultados del grupo y propone una práctica al estilo Saber 11 (contexto, cuatro opciones, competencia y explicación para el estudiante). El tallerista la ajusta, la aprueba y la agrega al simulacro.
 - **Grupo:** aciertos por área y estudiantes activos, sin datos individuales.
 - **Hojas en papel:** el tallerista toma la foto de la hoja, revisa la lectura y digita las marcas dudosas.
 
@@ -35,7 +36,7 @@ Publicado en https://fsotosa-ops.github.io/impulso-u-demo/
 - El PDF para imprimir.
 
 **Está simulado:**
-- Las propuestas de la IA vienen precalculadas en `data/banco.json`.
+- Las propuestas de la IA vienen precalculadas en `data/banco.json` y `js/generador.js`. Con los dos materiales de ejemplo salen preguntas escritas a mano; con texto pegado, reglas simples. Los PDF y las fotos se reemplazan por un material de ejemplo.
 - La «plataforma» es el `localStorage` del navegador.
 - Las respuestas del resto del grupo llegan con un temporizador.
 - La lectura de las hojas es un ejemplo fijo.

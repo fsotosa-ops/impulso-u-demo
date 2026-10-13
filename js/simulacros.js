@@ -1,4 +1,4 @@
-import { banco, estado, guardar, aprobadas, pregunta } from './estado.js';
+import { banco, estado, guardar, aprobadas, pregunta, textoDe } from './estado.js';
 import { ic, esc, CICLO, GRUPO, toast, modal } from './ui.js';
 import { pesoSimulacro } from './simulacro.js';
 import { respondieronDe } from './hoy.js';
@@ -38,7 +38,7 @@ function imprimir() {
     <style>body{font-family:Avenir Next,Arial,sans-serif;max-width:720px;margin:30px auto;color:#10213A;font-size:13px}h1{font-size:18px}
     .q{margin:14px 0;break-inside:avoid}.t{background:#f3f6fb;padding:8px;border-radius:6px;margin-bottom:6px}ol{margin:4px 0 0 18px}</style></head><body>
     <h1>Simulacro ${s.numero} · Grupo ${GRUPO.nombre} · código ${s.codigo}</h1>
-    ${qs.map((q, i) => `<div class="q">${q.texto ? `<div class="t">${esc(banco.textos[q.texto])}</div>` : ''}<b>${i + 1}.</b> ${esc(q.enunciado)}
+    ${qs.map((q, i) => `<div class="q">${textoDe(q) ? `<div class="t">${esc(textoDe(q))}</div>` : ''}<b>${i + 1}.</b> ${esc(q.enunciado)}
       <ol type="A">${q.opciones.map(o => `<li>${esc(o)}</li>`).join('')}</ol></div>`).join('')}
     <script>print()<\/script></body></html>`);
   w.document.close();

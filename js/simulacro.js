@@ -1,4 +1,4 @@
-import { banco, estado, guardar, pregunta, enLinea, sincronizar } from './estado.js';
+import { banco, estado, guardar, pregunta, enLinea, sincronizar, textoDe } from './estado.js';
 import { ic, esc, LETRAS, toast } from './ui.js';
 
 // Lo que baja el celular: las preguntas y los textos del simulacro, nada más.
@@ -68,6 +68,10 @@ function pantallaCel() {
       <div class="res-area">${Object.entries(res).map(([a, r]) => `
         <div class="r"><span>${esc(banco.areas[a])}</span><b>${r.ok} de ${r.n}</b><div class="progreso"><div style="width:${100 * r.ok / r.n}%"></div></div></div>`).join('')}
       </div>
+      ${(() => {
+        const mal = qs.map(pregunta).filter(q => it.respuestas[q.id] !== q.clave && q.explicacion).slice(0, 3);
+        return mal.length ? `<span class="lbl">Repasa lo que fallaste</span><ul class="repaso">${mal.map(q => `<li><b>${esc(q.enunciado.length > 70 ? q.enunciado.slice(0, 68) + '…' : q.enunciado)}</b>Respuesta: ${LETRAS[q.clave]}. ${esc(q.explicacion)}</li>`).join('')}</ul>` : '';
+      })()}
       <div class="card ${pendiente ? 'ambar' : 'suave'}" style="padding:12px">
         <p style="font-size:14px">${pendiente ? `${ic('avion', 14)} Guardado en tu celular. Se enviará cuando vuelva la señal; no tienes que hacer nada.` : `${ic('ok', 14)} Enviado. Tu tallerista verá el resultado del grupo, no el tuyo con nombre.`}</p>
       </div>
@@ -79,8 +83,9 @@ function pantallaCel() {
   return `${top}
     <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--gris)"><span>${esc(banco.areas[q.area])}</span><span>${it.i + 1} de ${qs.length}</span></div>
     <div class="progreso"><div style="width:${100 * (it.i + 1) / qs.length}%"></div></div>
-    ${q.texto ? `<div class="texto-base" style="margin:0 0 10px">${esc(banco.textos[q.texto])}</div>` : ''}
+    ${textoDe(q) ? `<div class="texto-base" style="margin:0 0 10px">${esc(textoDe(q))}</div>` : ''}
     <p style="font-size:15px;font-weight:500">${esc(q.enunciado)}</p>
+    ${q.pista ? `<p class="desc" style="font-size:13px;margin-top:4px">Pista: ${esc(q.pista)}</p>` : ''}
     <ul class="resp">${q.opciones.map((o, k) => `
       <li><button data-r="${k}" aria-pressed="${elegida === k}"><span class="letra">${LETRAS[k]}</span><span>${esc(o)}</span></button></li>`).join('')}
     </ul>
