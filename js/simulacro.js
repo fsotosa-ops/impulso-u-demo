@@ -1,5 +1,5 @@
 import { banco, estado, guardar, pregunta, enLinea, sincronizar } from './estado.js';
-import { ic, esc, encabezado, siguiente, LETRAS } from './ui.js';
+import { ic, esc, LETRAS, toast } from './ui.js';
 
 // Lo que baja el celular: las preguntas y los textos del simulacro, nada más.
 export function pesoSimulacro(ids) {
@@ -28,13 +28,12 @@ function resultado(respuestas, ids) {
 }
 
 let error = '';
-let aviso = '';
 
 function pantallaCel() {
   const sim = estado.simulacro;
   const it = estado.intento;
   const red = enLinea();
-  const top = `<div class="cel-top"><span>Impulso U</span><span class="conexion ${red ? 'on' : 'off'}">${red ? ic('wifi', 12) + ' Con señal' : ic('avion', 12) + ' Sin señal'}</span></div>`;
+  const top = `<div class="cel-top"><span class="marca"><span class="logo"><svg width="13" height="13" viewBox="0 0 24 24"><path d="M6 19V7m6 12v-8m6 8v-5" stroke="#fff" stroke-width="3" stroke-linecap="round"/></svg></span>Impulso <b>U</b></span><span class="conexion ${red ? 'on' : 'off'}">${red ? ic('wifi', 12) + ' Con señal' : ic('avion', 12) + ' Sin señal'}</span></div>`;
 
   if (!it || it.simulacro !== sim.numero) {
     const pre = new URLSearchParams(location.hash.split('?')[1] || '').get('c') || '';
@@ -67,7 +66,7 @@ function pantallaCel() {
       <h2>Terminaste el simulacro ${sim.numero}</h2>
       <p style="font-size:15px;margin-top:6px"><b style="font-size:26px;color:var(--azul)">${ok}</b> de ${qs.length} correctas</p>
       <div class="res-area">${Object.entries(res).map(([a, r]) => `
-        <div class="r"><span>${esc(banco.areas[a])}</span><b>${r.ok} de ${r.n}</b><div class="b"><div style="width:${100 * r.ok / r.n}%"></div></div></div>`).join('')}
+        <div class="r"><span>${esc(banco.areas[a])}</span><b>${r.ok} de ${r.n}</b><div class="progreso"><div style="width:${100 * r.ok / r.n}%"></div></div></div>`).join('')}
       </div>
       <div class="card ${pendiente ? 'ambar' : 'suave'}" style="padding:12px">
         <p style="font-size:14px">${pendiente ? `${ic('avion', 14)} Guardado en tu celular. Se enviará cuando vuelva la señal; no tienes que hacer nada.` : `${ic('ok', 14)} Enviado. Tu tallerista verá el resultado del grupo, no el tuyo con nombre.`}</p>
@@ -92,59 +91,45 @@ function pantallaCel() {
     </div>`;
 }
 
-export function pasoSabado(el, render) {
+export function estudiante(el, render) {
   const red = enLinea();
-  const sinRedReal = !navigator.onLine;
   const recibidos = estado.servidor.filter(s => s.origen !== 'papel').length;
   const hora = new Date().toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit', hour12: false });
 
   el.innerHTML = `
-  ${encabezado({ rol: 'Sábado · estudiantes', icono: 'cel', titulo: 'El estudiante responde en su celular, con o sin señal',
-    bajada: 'Es el único momento en que el estudiante usa la plataforma. Durante la rendición no se llama a la IA ni a ningún servicio externo.' })}
-  <div class="sabado">
+  <div class="escena">
     <div class="celular"><div class="pantalla">
-      <div class="barra-estado"><span>${hora}</span><span class="iconos">${red ? ic('wifi', 15) : `<span class="avion-on">${ic('avion', 15)}</span>`}</span></div>
+      <div class="barra-estado"><span>${hora}</span><button data-c="avion" aria-label="${estado.avion ? 'Quitar' : 'Activar'} modo avión">${red ? ic('wifi', 15) : `<span class="avion-on">${ic('avion', 15)}</span>`}</button></div>
       <div class="app-cel" id="app-cel">${pantallaCel()}</div>
     </div></div>
 
-    <div class="control">
+    <aside class="controles" aria-label="Controles de la demo">
+      <div class="titulo-ctrl">Controles de la demo</div>
       <div class="card">
         <div class="interruptor">
-          <div><h2>${ic('avion', 17)} Modo avión</h2>
-          <p class="desc">Córtale la señal al celular a mitad del simulacro. Las respuestas se guardan en el teléfono y llegan solas al reconectar.</p></div>
+          <div><h3>${ic('avion', 16)} Modo avión</h3><p class="desc" style="font-size:13px">Corta la señal del celular</p></div>
           <button class="switch" role="switch" aria-checked="${estado.avion}" aria-label="Modo avión" data-c="avion"></button>
         </div>
-        ${sinRedReal ? '<p class="nota" style="color:var(--ambar-t)">El navegador tampoco tiene red: la página está abriendo desde el celular.</p>' : '<p class="nota">La página también queda guardada en el celular: si la recargas sin red, abre igual.</p>'}
-        ${aviso ? `<p class="etiqueta e-ok mt" role="status">${ic('sync', 13)} ${esc(aviso)}</p>` : ''}
       </div>
-
-      <div class="cola">
-        <div class="card ${estado.cola.length ? 'ambar' : ''}"><div class="lbl">En el celular, sin enviar</div><div class="cifra">${estado.cola.length}</div><p class="desc">simulacros terminados</p></div>
-        <div class="card"><div class="lbl">Recibidos por la plataforma</div><div class="cifra">${recibidos}</div><p class="desc">desde este celular</p></div>
-      </div>
-
       <div class="card">
-        <h3>Lo que el MVP debe cumplir antes del piloto</h3>
-        <ul class="chequeos mt">
-          <li><span style="color:var(--ok)">${ic('ok')}</span><span>Peso del simulacro (límite: 1 MB)</span><span class="v">${pesoSimulacro(estado.simulacro.ids)} KB</span></li>
-          <li><span style="color:var(--ok)">${ic('ok')}</span><span>Llamadas a la IA durante la rendición</span><span class="v">0</span></li>
-          <li><span style="color:var(--ok)">${ic('ok')}</span><span>Datos personales que se piden</span><span class="v">Ninguno</span></li>
-          <li><span style="color:var(--ok)">${ic('ok')}</span><span>Respuestas perdidas al reconectar</span><span class="v">0</span></li>
-        </ul>
+        <div class="contador"><span>Guardados en el celular</span><b style="color:${estado.cola.length ? 'var(--ambar-t)' : 'inherit'}">${estado.cola.length}</b></div>
+        <div class="contador"><span>Recibidos por la plataforma</span><b>${recibidos}</b></div>
+        <div class="contador"><span>Respuestas perdidas</span><b>0</b></div>
+        <div class="contador"><span>Peso del simulacro</span><b>${pesoSimulacro(estado.simulacro.ids)} KB</b></div>
+        <div class="contador"><span>Llamadas a la IA</span><b>0</b></div>
       </div>
-
-      <div class="aviso">${ic('info')}<div>El código de este sábado es <b>${estado.simulacro.codigo}</b>. Lo publicó el tallerista en el paso anterior.</div></div>
-    </div>
-  </div>
-  ${siguiente('sincronizar', 'Ver qué recibe la plataforma')}`;
+      ${!navigator.onLine ? `<p class="etiqueta e-pend">${ic('avion', 12)} El navegador está sin red: la app abrió desde el celular</p>` : ''}
+      <p class="desc" style="font-size:13px">${estado.simulacro.publicado ? `Código vigente: <b>${estado.simulacro.codigo}</b>` : 'El simulacro de hoy aún no está publicado: <a href="#/simulacros?editar">publicarlo</a>'}</p>
+    </aside>
+  </div>`;
 
   const cel = el.querySelector('#app-cel');
   const it = estado.intento;
 
   cel.querySelector('[data-c="entrar"]')?.addEventListener('click', () => {
     const v = cel.querySelector('#codigo').value.trim().toUpperCase();
-    if (v !== estado.simulacro.codigo) {
-      error = v ? 'Ese código no corresponde a un simulacro publicado. Revisa el mensaje del tallerista.' : 'Escribe el código que llegó por WhatsApp.';
+    if (!estado.simulacro.publicado || v !== estado.simulacro.codigo) {
+      error = !estado.simulacro.publicado ? 'Todavía no hay un simulacro abierto. Tu tallerista mandará el código por WhatsApp.' : v ? 'Ese código no corresponde a un simulacro abierto. Revisa el mensaje de tu tallerista.' : 'Escribe el código que llegó por WhatsApp.';
       return render();
     }
     error = '';
@@ -165,21 +150,19 @@ export function pasoSabado(el, render) {
     it.fin = true;
     estado.cola.push({ simulacro: it.simulacro, respuestas: { ...it.respuestas }, dispositivo: estado.dispositivo, origen: 'celular', terminado: new Date().toISOString() });
     guardar();
-    const n = sincronizar();
-    aviso = n ? 'Enviado a la plataforma' : '';
+    if (sincronizar()) toast('Enviado a tu tallerista');
     render();
   });
   cel.querySelector('[data-c="repetir"]')?.addEventListener('click', () => {
     estado.intento = { simulacro: estado.simulacro.numero, i: -1, respuestas: {}, vuelta: (it.vuelta || 1) + 1 };
-    aviso = '';
     guardar();
     render();
   });
-  el.querySelector('[data-c="avion"]').addEventListener('click', () => {
+  el.querySelectorAll('[data-c="avion"]').forEach(b => b.addEventListener('click', () => {
     estado.avion = !estado.avion;
     guardar();
     const n = sincronizar();
-    aviso = n ? `Volvió la señal: ${n} ${n === 1 ? 'simulacro enviado' : 'simulacros enviados'}, 0 respuestas perdidas` : '';
+    if (n) toast(`Volvió la señal: ${n === 1 ? '1 simulacro enviado' : n + ' simulacros enviados'}`);
     render();
-  });
+  }));
 }

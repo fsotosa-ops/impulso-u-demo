@@ -4,25 +4,44 @@ export const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': 
 
 export const LETRAS = ['A', 'B', 'C', 'D'];
 
-export const PASOS = [
-  { ruta: 'ia', corto: 'La IA propone', rol: 'Entre semana · IA' },
-  { ruta: 'comite', corto: 'El comité aprueba', rol: 'Comité del colectivo' },
-  { ruta: 'publicar', corto: 'Se publica', rol: 'Tallerista' },
-  { ruta: 'sabado', corto: 'Responden', rol: 'Sábado · estudiantes' },
-  { ruta: 'sincronizar', corto: 'Llegan las respuestas', rol: 'Plataforma' },
-  { ruta: 'tablero', corto: 'Ven al grupo', rol: 'Tallerista' }
+export const fmt = n => n.toLocaleString('es-CO');
+
+// Datos del grupo de la demo: ciclo de febrero a agosto de 2027, hoy es el sábado de la semana 12.
+export const GRUPO = { nombre: 'Sábado A', inscritos: 50, semana: 12, semanas: 26, hoy: 'Sábado 24 de abril' };
+
+export const CICLO = [
+  { n: 1, fecha: '6 feb', nombre: 'Diagnóstico', respondieron: 50 },
+  { n: 2, fecha: '27 feb', respondieron: 46 },
+  { n: 3, fecha: '20 mar', respondieron: 43 },
+  { n: 4, fecha: '10 abr', respondieron: 41 },
+  { n: 5, fecha: '24 abr' },
+  { n: 6, fecha: '22 may' },
+  { n: 7, fecha: '19 jun' },
+  { n: 8, fecha: '24 jul', nombre: 'Simulacro final' }
 ];
 
-export function encabezado({ rol, icono, titulo, bajada, derecha = '' }) {
-  return `<header class="encabezado"><div>
-    <span class="rol">${ic(icono, 15)}${esc(rol)}</span>
-    <h1>${titulo}</h1>
-    ${bajada ? `<p>${bajada}</p>` : ''}
-  </div>${derecha}</header>`;
+export function toast(msg) {
+  let t = document.getElementById('toast');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'toast';
+    t.setAttribute('role', 'status');
+    document.body.appendChild(t);
+  }
+  t.innerHTML = `${ic('ok', 16)} ${esc(msg)}`;
+  t.classList.add('ver');
+  clearTimeout(t._t);
+  t._t = setTimeout(() => t.classList.remove('ver'), 2600);
 }
 
-export function siguiente(ruta, texto) {
-  return `<div class="mt2" style="display:flex;justify-content:flex-end"><a class="btn primario" href="#/${ruta}">${texto} ${ic('flecha', 16)}</a></div>`;
+export function modal(html, alAbrir) {
+  const fondo = document.createElement('div');
+  fondo.className = 'modal-fondo';
+  fondo.innerHTML = `<div class="modal" role="dialog" aria-modal="true">${html}</div>`;
+  document.body.appendChild(fondo);
+  const cerrar = () => fondo.remove();
+  fondo.addEventListener('click', e => { if (e.target === fondo || e.target.closest('[data-cerrar]')) cerrar(); });
+  document.addEventListener('keydown', function esc(e) { if (e.key === 'Escape') { cerrar(); document.removeEventListener('keydown', esc); } });
+  alAbrir?.(fondo.querySelector('.modal'), cerrar);
+  fondo.querySelector('button, a, textarea, input')?.focus();
 }
-
-export const fmt = n => n.toLocaleString('es-CO');

@@ -1,37 +1,47 @@
-# Impulso U · Demo del MVP
+# Impulso U · Mockup de la app
 
-Demo navegable del MVP de Impulso U: simulacros repetibles para preuniversitarios populares. El colectivo pone las preguntas, la IA amplía el banco y el comité aprueba cada una. El tallerista publica el simulacro por WhatsApp y el estudiante lo responde desde el celular, incluso sin conexión.
+Mockup navegable de Impulso U, la app de simulacros repetibles para preuniversitarios populares. Es el prototipo del pitch.
 
-Publicada en https://fsotosa-ops.github.io/impulso-u-demo/
+Publicado en https://fsotosa-ops.github.io/impulso-u-demo/
 
-## Recorrido
+## Las dos caras de la app
 
-«Una semana con Impulso U», en seis pasos:
+**Tallerista**, el usuario principal:
+- **Hoy:** el simulacro del día y las respuestas que van llegando.
+- **Banco de preguntas:** el comité revisa lo que propuso la IA y puede aprobar, corregir la clave o descartar. También agrega material propio del colectivo.
+- **Simulacros:** el ciclo de 8. Desde aquí se prepara y publica el de hoy, y se comparte con un enlace de WhatsApp, un código de grupo o un PDF para imprimir.
+- **Grupo:** aciertos por área y estudiantes activos, sin datos individuales.
+- **Hojas en papel:** el tallerista toma la foto de la hoja, revisa la lectura y digita las marcas dudosas.
 
-1. La IA propone preguntas a partir de las del colectivo (en lote, fuera del sábado).
-2. El comité revisa, corrige claves y aprueba o descarta.
-3. El tallerista arma el simulacro y lo comparte con un enlace y un código de grupo. Las hojas en papel se leen por foto.
-4. El estudiante responde en el celular, sin nombre ni documento, con o sin señal.
-5. La plataforma recibe las respuestas al reconectar.
-6. El tallerista ve al grupo: aciertos por área y estudiantes activos, sin datos individuales.
+**Estudiante**: entra con el código, sin cuenta ni nombre. Responde en el celular aunque no tenga señal, y lo respondido se envía solo al reconectar.
 
-La vista «Por qué es viable» resume qué entra al MVP, los doce requisitos, los costos y quién paga en cada fase.
+## Recorrido sugerido para el video (unos 3 minutos)
+
+1. **Hoy.** El simulacro 5 está listo para publicar.
+2. **Banco de preguntas.** La primera propuesta de la IA trae la clave errada (marca 40 km/h). El comité la corrige a 24 km/h y la aprueba.
+3. **Simulacros › Preparar.** Agrega la pregunta del bus, publica y comparte por WhatsApp.
+4. **Estudiante.** Entra con el código y responde. A mitad del simulacro activa el modo avión, termina, y el resultado queda «guardado en tu celular». Al quitar el modo avión, se envía.
+5. **Hoy.** Las respuestas del grupo siguen llegando.
+6. **Hojas en papel.** Registra una hoja y digita la marca dudosa de la segunda.
+7. **Grupo.** El área más baja y el pedido de más preguntas al próximo lote.
+
+«Reiniciar», arriba a la derecha, deja todo como al principio.
 
 ## Qué funciona y qué está simulado
 
-Funciona de verdad:
-- **El simulacro sin conexión.** Un service worker guarda la página en el teléfono, y las respuestas quedan en una cola local hasta que vuelve la red.
-- **El peso del paquete.** Se mide en vivo.
+**Funciona de verdad:**
+- El simulacro sin conexión: un service worker guarda la app en el teléfono y las respuestas esperan en una cola local hasta que vuelve la red.
+- El peso del simulacro, que se mide en vivo.
+- El PDF para imprimir.
 
-Está simulado:
+**Está simulado:**
 - Las propuestas de la IA vienen precalculadas en `data/banco.json`.
 - La «plataforma» es el `localStorage` del navegador.
-- La lectura de hojas en papel es un ejemplo fijo.
-- El tablero mezcla datos de ejemplo con las respuestas que se den en la demo.
+- Las respuestas del resto del grupo llegan con un temporizador.
+- La lectura de las hojas es un ejemplo fijo.
+- El historial del grupo son datos de ejemplo.
 
-El colectivo es ficticio y las preguntas son de redacción propia.
-
-«Reiniciar demo», en la barra lateral, deja todo como al principio, para grabar varias tomas.
+El colectivo y la tallerista son ficticios, y las preguntas son de redacción propia.
 
 ## Correrla en local
 

@@ -1,5 +1,5 @@
 // Estado de la demo. Todo vive en localStorage: el «servidor» también, porque la página es estática.
-const KEY = 'impulsou-demo-v1';
+const KEY = 'impulsou-app-v3';
 
 // El banco completo del colectivo: 50 propias y 150 propuestas por IA. El JSON trae solo una muestra;
 // estas cifras cubren el resto para que los contadores sumen lo mismo que el Doc (50 → 200).
@@ -20,7 +20,8 @@ function semilla() {
   return {
     decisiones: {},          // id → 'aprobada' | 'descartada'
     ediciones: {},           // id → { clave }
-    simulacro: { codigo: 'SAB-4821', ids: porDefecto(), numero: 4 },
+    simulacro: { codigo: null, ids: porDefecto(), numero: 5, publicado: null },
+    material: [],            // textos que el colectivo mandó al próximo lote
     dispositivo: Math.random().toString(16).slice(2, 6),
     intento: null,           // simulacro en curso en el celular
     cola: [],                // intentos terminados que aún no llegan a la plataforma
