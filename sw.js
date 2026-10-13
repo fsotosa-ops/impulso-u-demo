@@ -1,10 +1,10 @@
 // Guarda la demo en el celular para que el simulacro abra y se responda sin conexión.
-const CACHE = 'impulsou-v7';
+const CACHE = 'impulsou-v8';
 const ARCHIVOS = [
   './', 'index.html', 'css/estilo.css', 'data/banco.json', 'manifest.webmanifest',
   'js/app.js', 'js/estado.js', 'js/ui.js', 'js/hoy.js', 'js/banco.js',
   'js/simulacros.js', 'js/grupo.js', 'js/hojas.js', 'js/simulacro.js',
-  'js/crear.js', 'js/generador.js', 'js/login.js'
+  'js/crear.js', 'js/generador.js', 'js/login.js', 'js/importar.js'
 ];
 
 self.addEventListener('install', e => {

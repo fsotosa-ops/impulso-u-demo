@@ -57,7 +57,8 @@ if ('serviceWorker' in navigator) {
 // Mientras llegan las respuestas simuladas del grupo, las vistas del tallerista se actualizan solas.
 setInterval(() => {
   const r = rutaActual();
-  if (!['', 'simulacros', 'grupo'].includes(r) || document.querySelector('.modal-fondo')) return;
+  if (!['', 'simulacros', 'grupo', 'estudiante'].includes(r) || document.querySelector('.modal-fondo')) return;
+  if (r === 'estudiante' && document.querySelector('#codigo')) return;
   if (r === 'simulacros' && document.querySelector('.sel-preguntas')) return;
   if (estado.simulacro.publicado && llegadasSimuladas() < LLEGADAS) render();
 }, 900);

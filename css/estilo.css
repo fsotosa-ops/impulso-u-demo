@@ -348,3 +348,26 @@ label.subir { display: block; cursor: pointer; }
   .login-marca h1 { font-size: 28px; margin-top: 14px; }
   .login-marca p { font-size: 15px; }
 }
+
+/* ---------- Estado de sincronización (patrón offline-first) */
+.sync { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 600; border-radius: 999px; padding: 2px 9px; }
+.sync.on { background: var(--ok-suave); color: var(--ok); }
+.sync.off { background: var(--ambar); color: var(--ambar-t); }
+.sync.enviando { background: var(--suave); color: var(--azul); }
+.giro { width: 11px; height: 11px; border-radius: 50%; border: 2px solid currentColor; border-top-color: transparent; animation: girar .7s linear infinite; display: inline-block; flex: none; }
+.aviso-red { display: flex; gap: 8px; align-items: flex-start; font-size: 13px; border-radius: 12px; padding: 9px 11px; margin: -4px 0 12px; }
+.aviso-red svg { flex: none; margin-top: 2px; }
+.aviso-red.off { background: var(--ambar); color: #6B4300; }
+.aviso-red.enviando { background: var(--suave); color: var(--azul); align-items: center; }
+.aviso-red.ok { background: var(--ok-suave); color: var(--ok); }
+.espejo { transition: box-shadow .3s; }
+.espejo.recien { box-shadow: 0 0 0 3px var(--menta); }
+.espejo .llego { margin-top: 10px; font-size: 13px; color: var(--menta); display: flex; gap: 6px; align-items: flex-start; }
+.espejo .llego svg { flex: none; margin-top: 2px; }
+.escribiendo em { font-style: normal; font-size: 13px; color: var(--gris); margin-left: 8px; }
+.ctx-q { margin-top: 8px; font-size: 13.5px; }
+.ctx-q summary { cursor: pointer; color: var(--azul); font-weight: 600; }
+.ctx-q p { background: var(--fondo); border-left: 3px solid var(--menta); padding: 8px 10px; border-radius: 0 8px 8px 0; margin-top: 6px; white-space: pre-line; max-height: 220px; overflow-y: auto; }
+.fuente-q { font-size: 12px; color: var(--gris); margin-top: 10px; }
+.suave .texto-largo, .card.suave p.contexto { white-space: pre-line; }
+.contexto-prop { margin-top: 6px; font-size: 14.5px; white-space: pre-line; max-height: 260px; overflow-y: auto; }

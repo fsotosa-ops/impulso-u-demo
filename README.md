@@ -34,9 +34,10 @@ Publicado en https://fsotosa-ops.github.io/impulso-u-demo/
 - El simulacro sin conexión: un service worker guarda la app en el teléfono y las respuestas esperan en una cola local hasta que vuelve la red.
 - El peso del simulacro, que se mide en vivo.
 - El PDF para imprimir.
+- La lectura de material en «Crear con IA»: un PDF se lee en el navegador con pdf.js y una foto con OCR (Tesseract.js). Si trae preguntas con el formato de los cuadernillos del Icfes (contexto, «Pregunta N», opciones A–D y tabla de respuestas), se importan tal cual, con su clave y la afirmación que evalúan. Por ejemplo, el [cuadernillo de Lectura Crítica 2026](https://www.icfes.gov.co/wp-content/uploads/2026/03/16-feb-cuadernillo-de-preguntas-lectura-critica-saber-11-2026.pdf): 49 preguntas y 49 claves. Las preguntas del Icfes no se modifican; sus términos permiten el uso académico citando la fuente.
 
 **Está simulado:**
-- Las propuestas de la IA vienen precalculadas en `data/banco.json` y `js/generador.js`. Con los dos materiales de ejemplo salen preguntas escritas a mano; con texto pegado, reglas simples. Los PDF y las fotos se reemplazan por un material de ejemplo.
+- La IA que redacta preguntas nuevas es simulada: con los dos materiales de ejemplo salen preguntas escritas a mano (`js/generador.js`); con texto pegado, reglas simples.
 - La «plataforma» es el `localStorage` del navegador.
 - Las respuestas del resto del grupo llegan con un temporizador.
 - La lectura de las hojas es un ejemplo fijo.

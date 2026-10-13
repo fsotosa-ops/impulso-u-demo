@@ -1,5 +1,6 @@
 import { banco, estado, guardar, pregunta, enLinea, sincronizar, textoDe } from './estado.js';
-import { ic, esc, LETRAS, toast } from './ui.js';
+import { ic, esc, LETRAS, toast, GRUPO } from './ui.js';
+import { respondieronHoy } from './hoy.js';
 
 // Lo que baja el celular: las preguntas y los textos del simulacro, nada más.
 export function pesoSimulacro(ids) {
@@ -28,12 +29,46 @@ function resultado(respuestas, ids) {
 }
 
 let error = '';
+// Estados de sincronización, como en las apps offline-first: sin señal (con cola), enviando, enviado.
+let sincronizando = false;
+let avisoOk = 0;
+let ultimaSync = null;
+
+const hhmm = d => new Date(d).toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit', hour12: false });
+
+function estadoSync() {
+  if (sincronizando) return `<span class="sync enviando"><span class="giro"></span> Enviando…</span>`;
+  if (!enLinea()) return `<span class="sync off">${ic('avion', 12)} Sin señal${estado.cola.length ? ` · ${estado.cola.length} por enviar` : ''}</span>`;
+  if (estado.cola.length) return `<span class="sync off">${estado.cola.length} por enviar</span>`;
+  return `<span class="sync on">${ic('ok', 12)} Al día</span>`;
+}
+
+function avisos() {
+  if (!enLinea()) return `<div class="aviso-red off" role="status">${ic('avion', 14)}<span><b>Sin conexión.</b> Puedes seguir respondiendo: todo se guarda en este celular.</span></div>`;
+  if (sincronizando) return `<div class="aviso-red enviando" role="status"><span class="giro"></span><span>Volvió la señal. Enviando lo que respondiste…</span></div>`;
+  if (Date.now() - avisoOk < 3500) return `<div class="aviso-red ok" role="status">${ic('ok', 14)}<span><b>Enviado.</b> 0 respuestas perdidas.</span></div>`;
+  return '';
+}
+
+// Al volver la señal: un momento «enviando» y después la confirmación.
+function reconectar(render) {
+  if (!estado.cola.length) return render();
+  sincronizando = true;
+  render();
+  setTimeout(() => {
+    const n = sincronizar();
+    sincronizando = false;
+    if (n) { avisoOk = Date.now(); ultimaSync = Date.now(); }
+    render();
+    setTimeout(() => { if (location.hash.startsWith('#/estudiante')) render(); }, 3600);
+  }, 1300);
+}
 
 function pantallaCel() {
   const sim = estado.simulacro;
   const it = estado.intento;
   const red = enLinea();
-  const top = `<div class="cel-top"><span class="marca"><span class="logo"><svg width="13" height="13" viewBox="0 0 24 24"><path d="M6 19V7m6 12v-8m6 8v-5" stroke="#fff" stroke-width="3" stroke-linecap="round"/></svg></span>Impulso <b>U</b></span><span class="conexion ${red ? 'on' : 'off'}">${red ? ic('wifi', 12) + ' Con señal' : ic('avion', 12) + ' Sin señal'}</span></div>`;
+  const top = `<div class="cel-top"><span class="marca"><span class="logo"><svg width="13" height="13" viewBox="0 0 24 24"><path d="M6 19V7m6 12v-8m6 8v-5" stroke="#fff" stroke-width="3" stroke-linecap="round"/></svg></span>Impulso <b>U</b></span>${estadoSync()}</div>${avisos()}`;
 
   if (!it || it.simulacro !== sim.numero) {
     const pre = new URLSearchParams(location.hash.split('?')[1] || '').get('c') || '';
@@ -73,7 +108,7 @@ function pantallaCel() {
         return mal.length ? `<span class="lbl">Repasa lo que fallaste</span><ul class="repaso">${mal.map(q => `<li><b>${esc(q.enunciado.length > 70 ? q.enunciado.slice(0, 68) + '…' : q.enunciado)}</b>Respuesta: ${LETRAS[q.clave]}. ${esc(q.explicacion)}</li>`).join('')}</ul>` : '';
       })()}
       <div class="card ${pendiente ? 'ambar' : 'suave'}" style="padding:12px">
-        <p style="font-size:14px">${pendiente ? `${ic('avion', 14)} Guardado en tu celular. Se enviará cuando vuelva la señal; no tienes que hacer nada.` : `${ic('ok', 14)} Enviado. Tu tallerista verá el resultado del grupo, no el tuyo con nombre.`}</p>
+        <p style="font-size:14px">${pendiente ? `${ic('avion', 14)} Guardado en tu celular. Se enviará solo cuando vuelva la señal.` : `${ic('ok', 14)} Enviado${ultimaSync ? ` a las ${hhmm(ultimaSync)}` : ''}. Tu tallerista verá el resultado del grupo, no el tuyo con nombre.`}</p>
       </div>
       <div class="cel-pie"><button class="btn" data-c="repetir">Repetir</button></div>`;
   }
@@ -98,7 +133,8 @@ function pantallaCel() {
 
 export function estudiante(el, render) {
   const red = enLinea();
-  const recibidos = estado.servidor.filter(s => s.origen !== 'papel').length;
+  const ult = estado.servidor.filter(x => x.origen !== 'papel').at(-1);
+  const recien = ult && Date.now() - new Date(ult.recibido).getTime() < 6000;
   const hora = new Date().toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit', hour12: false });
 
   el.innerHTML = `
@@ -116,9 +152,15 @@ export function estudiante(el, render) {
           <button class="switch" role="switch" aria-checked="${estado.avion}" aria-label="Modo avión" data-c="avion"></button>
         </div>
       </div>
+      <div class="titulo-ctrl" style="margin-top:6px">Lo que ve la tallerista</div>
+      <div class="card oscura espejo ${recien ? 'recien' : ''}">
+        <div class="lbl">Simulacro ${estado.simulacro.numero} · ${GRUPO.nombre}</div>
+        ${estado.simulacro.publicado ? `<div class="cifra" style="margin-top:4px">${respondieronHoy()} <small>de ${GRUPO.inscritos} respondieron</small></div>
+        <div class="progreso" style="margin-top:10px"><div style="width:${100 * respondieronHoy() / GRUPO.inscritos}%"></div></div>
+        ${recien ? `<p class="llego">${ic('ok', 13)} Llegó el tuyo: respondido sin señal, recibido al reconectar</p>` : ''}` : '<p class="desc" style="margin-top:6px">Aún no publicado</p>'}
+      </div>
       <div class="card">
         <div class="contador"><span>Guardados en el celular</span><b style="color:${estado.cola.length ? 'var(--ambar-t)' : 'inherit'}">${estado.cola.length}</b></div>
-        <div class="contador"><span>Recibidos por la plataforma</span><b>${recibidos}</b></div>
         <div class="contador"><span>Respuestas perdidas</span><b>0</b></div>
         <div class="contador"><span>Peso del simulacro</span><b>${pesoSimulacro(estado.simulacro.ids)} KB</b></div>
         <div class="contador"><span>Llamadas a la IA</span><b>0</b></div>
@@ -155,7 +197,7 @@ export function estudiante(el, render) {
     it.fin = true;
     estado.cola.push({ simulacro: it.simulacro, respuestas: { ...it.respuestas }, dispositivo: estado.dispositivo, origen: 'celular', terminado: new Date().toISOString() });
     guardar();
-    if (sincronizar()) toast('Enviado a tu tallerista');
+    if (enLinea()) { sincronizar(); ultimaSync = Date.now(); toast('Enviado a tu tallerista'); }
     render();
   });
   cel.querySelector('[data-c="repetir"]')?.addEventListener('click', () => {
@@ -166,8 +208,6 @@ export function estudiante(el, render) {
   el.querySelectorAll('[data-c="avion"]').forEach(b => b.addEventListener('click', () => {
     estado.avion = !estado.avion;
     guardar();
-    const n = sincronizar();
-    if (n) toast(`Volvió la señal: ${n === 1 ? '1 simulacro enviado' : n + ' simulacros enviados'}`);
-    render();
+    if (enLinea()) reconectar(render); else render();
   }));
 }

@@ -50,6 +50,7 @@ function detalle(q) {
       <button class="btn peligro" data-acc="descartar">${ic('x', 16)} Descartar</button>
     </div>` : ''}
     ${origen ? `<div class="origen">Generada a partir de: «${esc(origen.enunciado)}»</div>` : ''}
+    ${q.fuente ? `<div class="origen">Fuente: ${esc(q.fuente)}</div>` : ''}
   </div>`;
 }
 
