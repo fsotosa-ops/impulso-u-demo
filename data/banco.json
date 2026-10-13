@@ -1,0 +1,134 @@
+{
+  "areas": {
+    "mat": "Matemáticas",
+    "lec": "Lectura crítica",
+    "cie": "Ciencias naturales",
+    "soc": "Sociales y ciudadanas",
+    "ing": "Inglés"
+  },
+  "textos": {
+    "t1": "En el preuniversitario nadie viene a llenarse de respuestas. Venimos a preguntarnos por qué la universidad pública queda tan lejos de algunos barrios, y a aprender juntos lo que el examen exige sin olvidar esa pregunta."
+  },
+  "preguntas": [
+    {
+      "id": "m1", "area": "mat", "estado": "propia",
+      "enunciado": "Si un pasaje de bus cuesta $3.200 y un estudiante va y vuelve a la universidad 5 días a la semana, ¿cuánto gasta en transporte en 4 semanas?",
+      "opciones": ["$64.000", "$96.000", "$128.000", "$160.000"], "clave": 2
+    },
+    {
+      "id": "m2", "area": "mat", "estado": "propia",
+      "enunciado": "En un grupo de 40 estudiantes, 24 aprobaron el simulacro. ¿Qué porcentaje del grupo no lo aprobó?",
+      "opciones": ["16 %", "24 %", "40 %", "60 %"], "clave": 2
+    },
+    {
+      "id": "m1a", "area": "mat", "estado": "pendiente", "origen": "m1",
+      "enunciado": "Si el pasaje sube de $3.200 a $3.400, ¿en qué porcentaje aumentó?",
+      "opciones": ["2 %", "5 %", "6,25 %", "7,5 %"], "clave": 2
+    },
+    {
+      "id": "m1b", "area": "mat", "estado": "pendiente", "origen": "m1",
+      "enunciado": "Una estudiante tiene $90.000 al mes para transporte y cada pasaje cuesta $3.000. ¿Cuántos viajes de ida y vuelta completos puede hacer en el mes?",
+      "opciones": ["12", "15", "20", "30"], "clave": 1
+    },
+    {
+      "id": "m1c", "area": "mat", "estado": "pendiente", "origen": "m1", "claveErrada": true,
+      "enunciado": "Un bus recorre 18 km en 45 minutos. ¿Cuál es su velocidad promedio en kilómetros por hora?",
+      "opciones": ["13,5 km/h", "24 km/h", "27 km/h", "40 km/h"], "clave": 3
+    },
+    {
+      "id": "m2a", "area": "mat", "estado": "pendiente", "origen": "m2",
+      "enunciado": "De 50 estudiantes inscritos, 35 asistieron el sábado. ¿Qué fracción del grupo faltó?",
+      "opciones": ["1/5", "3/10", "3/5", "7/10"], "clave": 1
+    },
+    {
+      "id": "l1", "area": "lec", "estado": "propia", "texto": "t1",
+      "enunciado": "¿Cuál es la intención principal del texto?",
+      "opciones": [
+        "Presentar el preuniversitario como un espacio que une la preparación para el examen con la reflexión sobre el acceso a la universidad.",
+        "Criticar el examen de Estado y proponer que se elimine.",
+        "Explicar cuáles son las preguntas que más se repiten en el examen.",
+        "Describir dónde quedan las universidades públicas de la ciudad."
+      ], "clave": 0
+    },
+    {
+      "id": "l1a", "area": "lec", "estado": "aprobada", "origen": "l1", "texto": "t1",
+      "enunciado": "En el texto, la expresión «llenarse de respuestas» se usa para",
+      "opciones": [
+        "cuestionar una educación que solo transmite información.",
+        "elogiar a los estudiantes que memorizan bien.",
+        "indicar cuántas preguntas tiene el examen.",
+        "explicar que el preuniversitario es gratuito."
+      ], "clave": 0
+    },
+    {
+      "id": "l1b", "area": "lec", "estado": "pendiente", "origen": "l1", "texto": "t1",
+      "enunciado": "¿Qué se puede inferir del texto?",
+      "opciones": [
+        "Para quien escribe, prepararse para el examen y pensar críticamente no se excluyen.",
+        "Quien escribe considera que el examen no sirve para nada.",
+        "Los estudiantes del preuniversitario viven cerca de la universidad.",
+        "El texto está dirigido a los docentes universitarios."
+      ], "clave": 0
+    },
+    {
+      "id": "c1", "area": "cie", "estado": "propia",
+      "enunciado": "Una estudiante deja dos vasos iguales con la misma cantidad de agua, uno al sol y otro a la sombra. Tres horas después, el vaso al sol tiene menos agua. ¿Qué factor está comparando?",
+      "opciones": ["La cantidad inicial de agua", "La exposición al sol", "El tamaño del vaso", "El tiempo de espera"], "clave": 1
+    },
+    {
+      "id": "c1a", "area": "cie", "estado": "aprobada", "origen": "c1",
+      "enunciado": "¿Qué proceso explica que el vaso al sol tenga menos agua?",
+      "opciones": ["Condensación", "Evaporación", "Solidificación", "Filtración"], "clave": 1
+    },
+    {
+      "id": "c1b", "area": "cie", "estado": "pendiente", "origen": "c1",
+      "enunciado": "Para que la comparación entre los dos vasos sea válida, ¿qué debe mantenerse igual?",
+      "opciones": [
+        "La luz que recibe cada vaso",
+        "La cantidad inicial de agua y el tipo de vaso",
+        "El lugar donde está cada vaso",
+        "La temperatura de cada vaso"
+      ], "clave": 1
+    },
+    {
+      "id": "s1", "area": "soc", "estado": "propia",
+      "enunciado": "La Constitución de 1991 define a Colombia como un Estado social de derecho. ¿Qué implica esa definición?",
+      "opciones": [
+        "Que el Estado debe garantizar derechos y condiciones de vida digna, no solo cumplir la ley.",
+        "Que solo el Congreso puede crear normas.",
+        "Que el presidente puede gobernar sin control de otros poderes.",
+        "Que el Estado tiene una religión oficial."
+      ], "clave": 0
+    },
+    {
+      "id": "s1a", "area": "soc", "estado": "aprobada", "origen": "s1",
+      "enunciado": "¿Qué mecanismo puede usar una persona para pedir la protección inmediata de un derecho fundamental?",
+      "opciones": ["El referendo", "La acción de tutela", "La moción de censura", "El cabildo abierto"], "clave": 1
+    },
+    {
+      "id": "s1b", "area": "soc", "estado": "pendiente", "origen": "s1",
+      "enunciado": "Los habitantes de un barrio sin ruta de transporte hacia la universidad pública quieren discutir el problema con el concejo en una sesión pública. ¿Qué mecanismo de participación les sirve?",
+      "opciones": ["La acción de tutela", "El plebiscito", "El cabildo abierto", "La revocatoria del mandato"], "clave": 2
+    },
+    {
+      "id": "i1", "area": "ing", "estado": "propia",
+      "enunciado": "Read: “María studies every Saturday at the community center because she wants to enter the public university.” Why does María study on Saturdays?",
+      "opciones": [
+        "Because she works at the community center.",
+        "Because she wants to enter the public university.",
+        "Because the university is closed on Saturdays.",
+        "Because she teaches English there."
+      ], "clave": 1
+    },
+    {
+      "id": "i1a", "area": "ing", "estado": "aprobada", "origen": "i1",
+      "enunciado": "Choose the correct option: “Last year, my brother ___ the exam twice.”",
+      "opciones": ["take", "takes", "took", "taking"], "clave": 2
+    },
+    {
+      "id": "i1b", "area": "ing", "estado": "pendiente", "origen": "i1",
+      "enunciado": "Complete: “If I ___ more time, I would practice every day.”",
+      "opciones": ["have", "had", "has", "having"], "clave": 1
+    }
+  ]
+}
