@@ -68,7 +68,7 @@ export function leerCuadernillo(lineasCrudas) {
   // Limpieza para texto de OCR: viñetas sueltas al inicio y líneas de dos o tres caracteres (bordes, rayas).
   const lineas = lineasCrudas
     .map(l => l.replace(/[ﬁ]/g, 'fi').replace(/[ﬂ]/g, 'fl').replace(/^[-–•·|]+\s*/, '').trim())
-    .filter(l => !RUIDO.test(l) && !(l.length > 0 && l.length < 4 && !/^[ABCD][.)]$/.test(l)));
+    .filter(l => !RUIDO.test(l) && !(l.length > 0 && l.length < 4 && !/^[ABCD][.)]$/.test(l) && !/^\d{1,2}\s+[ABCD]$/.test(l)));
   const preguntas = [];
   const contextos = [];
   let ctx = null;

@@ -346,7 +346,7 @@ export function crear(el, render) {
     li.addEventListener('click', marcar);
     li.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); marcar(); } });
   });
-  el.querySelector('[data-acc="todas"]')?.addEventListener('click', () => { p.preguntas.forEach(q => { if (q.estado === 'pendiente') q.estado = 'aprobada'; }); render(); });
+  el.querySelector('[data-acc="todas"]')?.addEventListener('click', () => { p.preguntas.forEach(q => { if (q.estado === 'pendiente' && !q.sinClave) q.estado = 'aprobada'; }); render(); });
   el.querySelector('[data-acc="guardar"]')?.addEventListener('click', () => {
     const nuevas = aprob.map(q => ({
       id: q.uid, area: p.area, estado: 'aprobada', origen: null, ia: !p.importada, contexto: q.contexto || p.contexto,

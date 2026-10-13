@@ -1,5 +1,5 @@
 // Guarda la demo en el celular para que el simulacro abra y se responda sin conexión.
-const CACHE = 'impulsou-v8';
+const CACHE = 'impulsou-v9';
 const ARCHIVOS = [
   './', 'index.html', 'css/estilo.css', 'data/banco.json', 'manifest.webmanifest',
   'js/app.js', 'js/estado.js', 'js/ui.js', 'js/hoy.js', 'js/banco.js',
