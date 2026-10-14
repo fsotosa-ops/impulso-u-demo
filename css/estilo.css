@@ -401,3 +401,6 @@ label.subir { display: block; cursor: pointer; }
 .tour.grande .tour-globo p { font-size: 17.5px; }
 .tour.grande .tour-n { font-size: 14px; }
 .tour.grande .tour-pista, .tour.grande .tour-saltar { font-size: 14px; }
+/* Oculto no intercepta clics; y en la grabación el foco salta sin animar posición (la cámara lenta la congela). */
+.tour:not(.ver) .tour-globo { pointer-events: none; visibility: hidden; }
+.tour.grande .tour-foco { transition: none; }
