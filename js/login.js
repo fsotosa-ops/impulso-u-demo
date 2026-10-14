@@ -24,9 +24,11 @@ export function login(el, render) {
       <button class="btn primario" style="width:100%;justify-content:center;padding:11px">Entrar</button>
       <div class="separador"><span>¿Eres estudiante?</span></div>
       <a class="btn" style="width:100%;justify-content:center" href="#/estudiante">${ic('cel', 16)} Entrar con el código de tu grupo</a>
-      <p class="desc" style="font-size:12px;margin-top:12px;text-align:center">Demo: cualquier correo y contraseña sirven.</p>
+      <p class="desc" style="font-size:12px;margin-top:12px;text-align:center">Demo: cualquier correo y contraseña sirven. ¿Primera vez? <a href="#" data-recorrido>Ver recorrido guiado</a></p>
     </form>
   </div>`;
+
+  el.querySelector('[data-recorrido]').addEventListener('click', e => { e.preventDefault(); document.getElementById('recorrido').click(); });
 
   el.querySelector('#form-login').addEventListener('submit', e => {
     e.preventDefault();

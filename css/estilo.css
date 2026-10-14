@@ -371,3 +371,33 @@ label.subir { display: block; cursor: pointer; }
 .fuente-q { font-size: 12px; color: var(--gris); margin-top: 10px; }
 .suave .texto-largo, .card.suave p.contexto { white-space: pre-line; }
 .contexto-prop { margin-top: 6px; font-size: 14.5px; white-space: pre-line; max-height: 260px; overflow-y: auto; }
+
+/* ---------- Recorrido guiado (js/tour.js) */
+.tour { position: fixed; inset: 0; z-index: 90; pointer-events: none; opacity: 0; transition: opacity .25s; }
+.tour.ver { opacity: 1; }
+.tour.sin-foco { background: rgba(12, 32, 61, .5); }
+.tour-foco { position: fixed; border-radius: 14px; box-shadow: 0 0 0 9999px rgba(12, 32, 61, .5); outline: 2px solid var(--menta); outline-offset: 2px; transition: left .35s ease, top .35s ease, width .35s ease, height .35s ease; }
+.tour-foco::after { content: ''; position: absolute; inset: -2px; border-radius: 16px; border: 2px solid var(--menta); animation: tour-pulso 1.6s ease-out infinite; }
+@keyframes tour-pulso { from { opacity: .9; transform: scale(1); } to { opacity: 0; transform: scale(1.06); } }
+.tour-globo { position: fixed; left: 0; top: 0; width: 330px; background: #fff; border-radius: 14px; padding: 14px 16px 12px; box-shadow: 0 12px 36px rgba(12, 32, 61, .28); pointer-events: auto; transition: transform .35s ease; }
+.tour-cab { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.tour-n { background: var(--suave); color: var(--azul); font-size: 12px; font-weight: 700; border-radius: 999px; padding: 2px 9px; }
+.tour-saltar { background: none; border: 0; color: var(--gris); font-size: 12px; text-decoration: underline; }
+.tour-globo h3 { font-size: 16.5px; line-height: 1.25; margin-bottom: 4px; }
+.tour-globo p { font-size: 14px; color: var(--gris); line-height: 1.4; }
+.tour-barra { height: 4px; background: var(--suave); border-radius: 4px; margin: 12px 0 10px; overflow: hidden; }
+.tour-barra i { display: block; height: 100%; background: var(--azul); border-radius: 4px; transition: width .35s ease; }
+.tour-pie { display: flex; align-items: center; gap: 8px; justify-content: flex-end; }
+.tour-pista { margin-right: auto; font-size: 12.5px; font-weight: 600; color: var(--ok); }
+.tour-pie [hidden] { display: none; }
+.tour-punta { position: absolute; width: 14px; height: 14px; background: #fff; transform: rotate(45deg); }
+.tour-globo[data-lado="der"] .tour-punta { left: -7px; margin-top: -7px; }
+.tour-globo[data-lado="izq"] .tour-punta { right: -7px; margin-top: -7px; }
+.tour-globo[data-lado="abajo"] .tour-punta { top: -7px; margin-left: -7px; }
+.tour-globo[data-lado="arriba"] .tour-punta { bottom: -7px; margin-left: -7px; }
+.tour-globo[data-lado="centro"] .tour-punta, .tour-globo[data-lado="dentro"] .tour-punta { display: none; }
+.tour.grande .tour-globo { width: 430px; padding: 18px 20px 16px; }
+.tour.grande .tour-globo h3 { font-size: 22px; }
+.tour.grande .tour-globo p { font-size: 17.5px; }
+.tour.grande .tour-n { font-size: 14px; }
+.tour.grande .tour-pista, .tour.grande .tour-saltar { font-size: 14px; }

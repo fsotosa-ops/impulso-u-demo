@@ -7,6 +7,7 @@ import { hojas, hojasPendientes } from './hojas.js';
 import { estudiante } from './simulacro.js';
 import { crear } from './crear.js';
 import { login, sesion, cerrarSesion } from './login.js';
+import { iniciar as recorrido } from './tour.js';
 
 const RUTAS = { '': hoy, banco, simulacros, crear, grupo, hojas, estudiante };
 
@@ -43,6 +44,8 @@ document.getElementById('salir').addEventListener('click', () => {
   location.hash = '#/';
   render();
 });
+
+document.getElementById('recorrido').addEventListener('click', recorrido);
 
 document.getElementById('reiniciar').addEventListener('click', () => {
   reiniciar();
