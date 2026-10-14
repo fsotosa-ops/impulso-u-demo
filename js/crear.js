@@ -100,7 +100,7 @@ async function procesarArchivo(f, render) {
     s.progreso = 'Buscando preguntas…';
     vivo();
     const qs = leerCuadernillo(r.lineas);
-    if (qs.length) return armarDesdeMaterial(qs, detectarAreaCuadernillo(r.lineas) || detectarArea(r.lineas.join(' ')), f.name, !esPDF, render);
+    if (qs.length) return armarDesdeMaterial(qs, detectarAreaCuadernillo(r.lineas) || areaPorPreguntas(qs) || detectarArea(r.lineas.join(' ')), f.name, !esPDF, render);
     const texto = r.lineas.filter(Boolean).join(' ').replace(/\s+/g, ' ').slice(0, 1800);
     if (texto.length < 60) throw new Error('casi no encontré texto');
     s.area = detectarArea(texto);
@@ -111,6 +111,14 @@ async function procesarArchivo(f, render) {
     s.fase = 'error';
     vivo();
   }
+}
+
+// Sin encabezado legible (pasa con fotos), el área se deduce de lo que piden las preguntas.
+function areaPorPreguntas(qs) {
+  const t = qs.map(q => q.enunciado).join(' ').toLowerCase();
+  if (/texto|párrafo|parrafo|fragmento|autor|narra|lector|lectura/.test(t)) return 'lec';
+  if (/calcul|porcentaje|promedio|ecuaci|gráfica|cuánto|cuántos/.test(t)) return 'mat';
+  return null;
 }
 
 function armarDesdeMaterial(qs, area, nombre, foto, render) {
