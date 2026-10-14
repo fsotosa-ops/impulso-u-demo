@@ -64,10 +64,13 @@ function seguir() {
     if (!actual) return;
     const foco = capa.querySelector('.tour-foco'), globo = capa.querySelector('.tour-globo');
     const el = actual.sel && document.querySelector(actual.sel);
-    const W = innerWidth, H = innerHeight, gw = globo.offsetWidth, gh = globo.offsetHeight, m = 14;
+    // Con zoom en el body (la grabación lo usa), las medidas llegan escaladas y las posiciones se aplican sin escalar.
+    const z = parseFloat(getComputedStyle(document.body).zoom) || 1;
+    const W = innerWidth / z, H = innerHeight / z, gw = globo.offsetWidth, gh = globo.offsetHeight, m = 14;
     let x, y, lado = 'centro';
     if (el) {
-      const r = el.getBoundingClientRect(), p = 8;
+      const b = el.getBoundingClientRect(), p = 8;
+      const r = { left: b.left / z, top: b.top / z, right: b.right / z, bottom: b.bottom / z, width: b.width / z, height: b.height / z };
       Object.assign(foco.style, { display: 'block', left: r.left - p + 'px', top: r.top - p + 'px', width: r.width + 2 * p + 'px', height: r.height + 2 * p + 'px' });
       const cabe = { der: W - r.right > gw + 2 * m, izq: r.left > gw + 2 * m, abajo: H - r.bottom > gh + 2 * m, arriba: r.top > gh + 2 * m };
       lado = cabe[actual.lado] ? actual.lado : ['der', 'abajo', 'izq', 'arriba'].find(l => cabe[l]) || 'dentro';
